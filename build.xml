@@ -1,0 +1,84 @@
+<project name="MarsRovers" default="allFullBuild" basedir=".">
+    <description>
+        simple example build file
+    </description>
+  <!-- set global properties for this build -->
+  <property name="inputFile" value="validInput.txt"/>	
+  <property name="src" location="src/java"/>
+  <property name="src-test" location="test/java"/>
+  <property name="build" location="build/src"/>
+  <property name="build-test" location="build/testcases"/>
+  <property name="dist"  location="dist"/>
+	
+  <path id="classpath.base">
+  </path>
+		
+  <path id="classpath.test">
+	<pathelement location="lib/junit-4.5.jar" />
+	<pathelement location="${build}" />
+  	<pathelement location="${build-test}" />
+	<path refid="classpath.base" />
+  </path>
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structures used by compile and compileTest -->
+    <mkdir dir="${build}"/>
+  	<mkdir dir="${build-test}"/>
+  </target>
+
+  <target name="compile" depends="init" description="compile the source " >
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}"/>
+  </target>
+	
+  <target name="compileTest" depends="compile" description="compile the testcases " >
+	<!-- Compile the java code from ${src-test} into ${build-test} -->
+	<javac srcdir="${src-test}" destdir="${build-test}">
+		<classpath refid="classpath.test"/>
+	</javac>
+  </target>	
+	
+  <target name="test" depends="compileTest" description="run the junit testcases ">
+  	<junit printsummary="yes" haltonfailure="yes">
+  		<classpath refid="classpath.test" />
+      	<batchtest>
+	        <fileset dir="${build-test}" includes="**/Test*.class" excludes="**/Test*$*.class"/>
+	     </batchtest>
+	</junit>
+  </target>	
+	
+  <target name="run" depends="dist" description="runs the MarRovers application">
+  	<echo message="Inputs would be taken from the file: ${inputFile}"/>
+  	<echo message="[You can change the input file by changing the value of property, 'inputFile' in the build.xml]"/>
+  	
+  	<java classname="com.thoughtworks.rover.RunRoversMain">
+  		<arg value="${inputFile}"/>
+        <classpath>
+          <pathelement location="${dist}/lib/MarsRovers.jar"/>
+          <pathelement path="${java.class.path}"/>
+        </classpath>
+	</java>
+  </target>
+	
+  <target name="allFullBuild" depends="clean, test, dist" 
+  	description="clean, compile source, compile tests, run test, dist"/>
+  	
+
+  <target name="dist" depends="compile" description="generate the distribution" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}/lib"/>
+
+    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+    <jar jarfile="${dist}/lib/MarsRovers.jar" basedir="${build}"/>
+  </target>
+
+  <target name="clean" description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+  	<delete dir="${build-test}"/>
+    <delete dir="${dist}"/>
+  </target>
+
+</project>
