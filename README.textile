@@ -1,4 +1,4 @@
-h2. PROBLEM ONE: MARS ROVERS
+h3. PROBLEM ONE: MARS ROVERS
 
 A squad of robotic rovers are to be landed by NASA on a plateau on Mars.
 This plateau, which is curiously rectangular, must be navigated by the
@@ -34,7 +34,7 @@ Each rover will be finished sequentially, which means that the second rover
 won't start to move until the first one has finished moving.
 
 
-h2. OUTPUT
+h3. OUTPUT
 
 The output for each rover should be its final co-ordinates and heading.
 
